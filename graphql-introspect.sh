@@ -19,7 +19,7 @@ HEADERS=""
 
 # Get the directory where the script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIG_FILE="${SCRIPT_DIR}/introspection-query.json"
+CONFIG_FILE="${SCRIPT_DIR}/introspection-query.graphql"
 
 # Load introspection query from config file
 if [ ! -f "$CONFIG_FILE" ]; then
@@ -27,7 +27,16 @@ if [ ! -f "$CONFIG_FILE" ]; then
     exit 1
 fi
 
-INTROSPECTION_QUERY=$(cat "$CONFIG_FILE")
+# Read the GraphQL query and escape it for JSON
+QUERY_CONTENT=$(cat "$CONFIG_FILE" | tr -d '\n' | sed 's/"/\\"/g')
+
+# Wrap in JSON format for the API request
+INTROSPECTION_QUERY=$(cat <<EOF
+{
+  "query": "$QUERY_CONTENT"
+}
+EOF
+)
 
 # Help message
 show_help() {

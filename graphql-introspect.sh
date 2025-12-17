@@ -17,12 +17,17 @@ OUTPUT_FILE=""
 ENDPOINT=""
 HEADERS=""
 
-# Introspection query
-read -r -d '' INTROSPECTION_QUERY << 'EOF' || true
-{
-  "query": "query IntrospectionQuery { __schema { queryType { name } mutationType { name } subscriptionType { name } types { ...FullType } directives { name description locations args { ...InputValue } } } } fragment FullType on __Type { kind name description fields(includeDeprecated: true) { name description args { ...InputValue } type { ...TypeRef } isDeprecated deprecationReason } inputFields { ...InputValue } interfaces { ...TypeRef } enumValues(includeDeprecated: true) { name description isDeprecated deprecationReason } possibleTypes { ...TypeRef } } fragment InputValue on __InputValue { name description type { ...TypeRef } defaultValue } fragment TypeRef on __Type { kind name ofType { kind name ofType { kind name ofType { kind name ofType { kind name ofType { kind name ofType { kind name ofType { kind name } } } } } } } }"
-}
-EOF
+# Get the directory where the script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="${SCRIPT_DIR}/introspection-query.json"
+
+# Load introspection query from config file
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo -e "${RED}Error: Config file not found: $CONFIG_FILE${NC}" >&2
+    exit 1
+fi
+
+INTROSPECTION_QUERY=$(cat "$CONFIG_FILE")
 
 # Help message
 show_help() {

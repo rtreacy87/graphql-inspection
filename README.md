@@ -1,6 +1,8 @@
-./graph# GraphQL Introspection Script
+# GraphQL Introspection Script
 
 A bash script to query GraphQL endpoints with introspection queries and handle the output flexibly.
+
+📖 **[Understanding the Introspection Query](./INTROSPECTION-QUERY-EXPLAINED.md)** - Line-by-line explanation of what the introspection query does
 
 ## Features
 
